@@ -1,0 +1,2185 @@
+ 
+ var topLevelDomain = "xiaozhu.com";
+var domain = "www.xiaozhu.com";
+var webimIframUrl = "http://xiaozhu.com/webim.html";
+var uploadImageUrl = "http://image2.xiaozhustatic2.com/imgin4uploadify.php";
+var jciUrl = "http://jci.xiaozhustatic2.com";
+var webimYUI = "{{{webimYUI}}}";
+var webimV2 = "{{{webimV2}}}";
+var client_id_youku = '16edde5f79e61324'; 
+
+document.domain = topLevelDomain;
+
+var hostArray = window.location.hostname.split('.');
+if (hostArray.length == 5 && hostArray[2] == 'partner') {
+    topLevelDomain = hostArray[1] + '.' + hostArray[2] + '.xiaozhu.com';
+} else if (hostArray.length == 4 && hostArray[1] == 'partner') {
+    topLevelDomain = hostArray[0] + '.' + hostArray[1] + '.xiaozhu.com';
+}
+
+if (typeof(window.jQuery) != "undefined")
+{
+    if ($("#head_newmsg2"))
+    {
+        $("#head_newmsg2").hover(
+            function () {
+                $("#head_newmsg2 a.icon_arrowB").addClass("nav_current");
+                $("#head_newmsg2 a.icon_arrowB").removeClass("icon_arrowB");
+                $("#head_newmsg2 div.nav_pop ").show();
+            },
+            function () {
+                $("#head_newmsg2 a.nav_current").addClass("icon_arrowB");
+                $("#head_newmsg2 a.nav_current").removeClass("nav_current");
+                $("#head_newmsg2 div.nav_pop ").hide();
+            }
+        );
+    }
+}
+
+function tipBackyardSuccess(classname)
+{
+    if (typeof(classname) == 'undefined' || classname == '')
+        classname = 'tips_right';
+
+    $('.'+classname).show();
+
+    var displayText = 3;
+    var showtime=setInterval(function(){
+    if(displayText>0)
+    {
+        displayText--;
+        $('.'+classname).show();
+    }
+    else {
+        $('.'+classname).hide();
+        clearInterval(showtime);
+    }
+    },1000);
+}
+
+function tipBackyardError(errmsg,classname)
+{
+    if (typeof(classname) == 'undefined' || classname == '')
+        classname = 'tips_error';
+
+    $('.'+classname).html(errmsg);
+    $('.'+classname).show();
+
+    var displayText = 3;
+    var showtime=setInterval(function(){
+    if(displayText>0)
+    {
+        displayText--;
+        $('.'+classname).show();
+    }
+    else {
+        $('.'+classname).hide();
+        clearInterval(showtime);
+    }
+    },1000);
+}
+
+function tipBackyardReset(classnameSucc, classnameErr)
+{
+    if (typeof(classnameSucc) == 'undefined' || classnameSucc == '')
+        classnameSucc = 'tips_right';
+    $('.'+classnameSucc).hide();
+
+    if (typeof(classnameErr) == 'undefined' || classnameErr == '')
+        classnameErr = 'tips_error';
+    $('.'+classnameErr).hide();
+
+}
+function loadNyroModal()
+{
+}
+ 
+ var XZWebUrlWriter = {
+    getWebPhp : function () {
+        return 'xzweb.php';
+    },
+    getAjaxPhp : function () {
+        return 'ajax.php';
+    },
+    getRequest : function(url,type) {
+        var nexturl = $('input[name=next]').val();
+        //if (nexturl).next = nexturl;
+        var returnData;
+        type = (type == undefined) ? 'json' : type;
+       
+        $.ajax({
+            type     : "GET",
+            url      : url,
+            dataType : type,
+            async    : false,
+            data     : {'_':Math.random()},
+            success  : function(datas){returnData = datas;},
+            error : function (XMLHttpRequest, textStatus, errorThrown){
+                alert('网络错误,请刷新页面重试:'+textStatus);
+            }
+        });
+        return returnData;
+    },
+    postRequest : function(url,requestParam) {
+        if (!requestParam) var requestParam = {};
+        var nexturl = $('input[name=next]').val();
+        if (nexturl) requestParam.next = nexturl;
+        var returnData;
+        $.ajax({
+            type     : "POST",
+            url      : url,
+            data     : requestParam,
+            dataType : 'json',
+            async    : false,
+            success  : function(datas){returnData = datas;},
+            error : function (XMLHttpRequest, textStatus, errorThrown){
+                alert('网络错误,请刷新页面重试:'+textStatus);
+            }
+        });
+        return returnData;
+    },
+    getWebIm_ServerUrl: function() {
+        return 'http://'+domain+'/webim.php?op=getServerUrl';
+    },
+    getWebIm_DrawIframeUrl : function (userid) {
+        return 'http://'+domain+'/webim.php?op=drawIframe&userid=' + userid;
+    },
+    getWebIm_DrawBaseBtnUrl: function(next) {
+        return 'http://'+domain+'/webim.php?op=drawImBaseBtn&next=' + next;
+    },
+    getWebIm_DrawZhunaIframeUrl : function () {
+        return 'http://'+domain+'/webim.php?op=drawZhunaIframe';
+    },
+    getWebIm_IframeUrl : function (userId) {
+        return webimIframUrl;
+    },
+    getWebIm_LodgeUnitData: function (roomid) {
+        return 'http://'+domain+'/webim.php?op=getLodgeUnitData&roomid=' + roomid;
+    },
+    getWebIm_FavoriteList: function (userid) {
+        return 'http://'+domain+'/webim.php?op=getFavoriteList&userid=' + userid;
+    },
+    getWebIm_RequestNotificationUrl : function (userid) {
+        return 'http://'+domain+'/webim.php?op=getNotification&terminal=all_web&userid=' + userid;
+    },
+    getWebIm_RequestUserSysNoticeCnt : function (userid, userrole) {
+        return 'http://'+domain+'/webim.php?op=getUserSysNoticeCnt&userid=' + userid + '&userrole=' + userrole;
+    },
+    getWebIm_RequestUserSysNotice : function (userid, userrole) {
+        return 'http://'+domain+'/webim.php?op=getUserSysNotice&userid=' + userid + '&userrole=' + userrole;
+    },
+    getWebIm_UserData : function(userid) {
+        return 'http://'+domain+'/webim.php?op=getUserData&userid=' + userid;
+    },
+    getWebIm_talkHis : function(isTenant,offset,length) {
+        return 'http://'+doamin+'/webim.php?op=loadTalkHis&isTenant=' + isTenant + '&offset=' + offset + '&length=' + length + '&userId=' + currentUser; 
+    },
+    getWebIm_talkMagHis: function(tenantId,luId,length,lastMessageId) {
+        return 'http://'+domain+'/webim.php?op=loadTalkMsgHis&tenantId= ' + tenantId + '&luId=' + luId +'&length=' + length + '&lastMessageId= ' + lastMessageId;
+    },
+    getWebIm_TalkHisUrl : function (landlordid, tenantid, objid, userid) {
+        return 'http://'+domain+'/webim.php?op=getTalkHisUrl&landlordid=' + landlordid + '&tenantid=' + tenantid + '&objid=' + objid + '&userid=' + userid + '&_t=' + new Date().getTime();
+    },
+    getWebIm_RequestFastReplyUrl : function (userid) {
+        return 'http://'+domain+'/webim.php?op=getFastReply&userid=' + userid + '&_t=' + new Date().getTime();
+    },
+    getWebIm_FangDongSpecialLodgeUnitUrl : function (userid) {
+        return "http://" + topLevelDomain + "/fangdong/" + userid +"/fangzi.html";
+    },
+    getWebIm_RequestRecommendLuUrl : function (userid) {
+        return 'http://'+domain+'/webim.php?op=getRecommendLuList&userid=' + userid;
+    },
+    getWebIm_RequestUserStateUrl : function (userid,imuserrole) {
+        return 'http://'+domain+'/webim.php?op=getUserState&userid=' + userid + '&imuserrole=' + imuserrole;
+    },
+    getWebIm_RequestSynTalkMsgUrl: function (userid,synMinTime,synMaxTime) {
+        return 'http://'+domain+'/webim.php?op=SynTalkMsg&userId=' + userid + '&synMinTime=' + synMinTime + '&synMaxTime=' + synMaxTime;
+    },
+    getWebIm_RequestTalkMsgSetRead: function(tenantId,luId,isTenant) {
+        return 'http://'+domain+'/webim.php?op=talkMsgSetRead&tenantId=' + tenantId + '&luId=' + luId + '&isTenant=' + isTenant + '&_t=' + new Date().getTime();
+    },
+    getWebIm_AlipayTrustZMInfoPair : function (applyUserId,ownerUserId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetZminfo_Pair&applyUserId=' + applyUserId + '&ownerUserId='+ownerUserId+'&_t=' + new Date().getTime();
+    },
+    getWebIm_AlipayTrustLayer : function (landlordid) {
+        return 'http://'+domain+'/webim.php?op=getAlipayTrustLayer&landlordid=' + landlordid + '&_t=' + new Date().getTime();
+    },
+    getWebIm_CheckKeywordUrl : function (dataArr, type) {
+        return 'http://greatwall.xiaozhu.com/greatwall.php?content=' + JSON.stringify(dataArr) + '&type=' + type + '&_t=' + new Date().getTime();
+    },
+    getWebIm_AllFriendAndLuData : function (allfriendid,allluid) {
+        return 'http://'+domain+'/webim.php?op=getAllFriendAndLuData&userlist=' + allfriendid + '&lulist=' + allluid + '&_t=' + new Date().getTime();
+    },
+    getWeb_NoticeReachedFeedbackUrl : function (timerid,operate) {
+        return 'http://'+domain+'/xzweb.php?op=NotificationReachedFeedback&timerid=' + timerid + '&operate=' + operate;
+    },
+
+    getWeb_InfoEventReachUrl : function (timerid,operate,receiverId) {
+        return 'http://'+domain+'/xzweb.php?op=InfoEventReach&timerid=' + timerid + '&operate=' + operate + '&receiverid='+receiverId;
+    },
+
+    getInfoEventDealActionUrl : function (dealaction,objid,objtype,receiverid,displaystrategy) {
+        return 'http://'+domain+'/xzweb.php?op=GetInfoEventDealActionUrl&dealaction=' + dealaction + '&objid=' + objid + '&objtype=' + objtype + '&receiverid=' + receiverid + '&displaystrategy='+displaystrategy;
+    },
+
+    getWeb_FangDong_FangDong_ShowLetter: function() {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_ShowLetter';
+    },
+    getWeb_FangKe_FangKe_ShowLetter: function() {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_ShowLetter';
+    },
+    getWeb_FangKe_Special_Index: function(tenantid) {
+        return 'http://'+domain+'/xzweb.php?op=Front_FangKe_Special_Index&tenantid=' + tenantid;
+    },
+    getWeb_FangDong_Special_Index: function(landlordid) {
+        return 'http://'+domain+'/xzweb.php?op=Front_FangDong_Special_Index&landlordid=' + landlordid;
+    },
+    getWeb_FangDong_ResetFastReplyUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_ChatSet';
+    },
+    getWeb_FangDong_NoticeUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_ShowSysNotice';
+    },
+    getWeb_FangKe_NoticeUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_ShowSysNotice';
+    },
+
+    getWeb_FangKe_DoPostCommentUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_DoPostComment';
+    },
+    getWeb_FangDong_DoPostCommentUrl : function (objId,bookorderId,content,commentScore,fkTag) {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_DoPostComment&objId=' + objId + '&bookorderId=' + bookorderId + '&content=' + content + commentScore + '&fkTag=' + fkTag;
+    },
+    getWeb_FangKe_IndexUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_Index';
+    },
+    getWeb_FangDong_IndexUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_Index';
+    },
+    getWeb_FangKe_AddCommentUrl : function (bookorderId) {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_Comment_Self&bookorderid=' + bookorderId + '&random=' + new Date().getTime();
+    },
+    getWeb_FangKe_DeleteTenantUrl : function (tenantId) {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_DeleteUserTenant&tenantId=' + tenantId;
+    },
+    getWeb_FangKe_UserTenantDetailUrl : function (tenantId) {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_UserTenantDetail&tenantId=' + tenantId;
+    },
+    getWeb_FangKe_EditUserTenantUrl : function (tenantId,realName,tenantSex,ageGroup,cardType,cardNo,yearOfBirth,monthOfBirth,dayOfBirth,mobile,phonecode) {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_UpdateUserTenant&tenantId=' + tenantId + '&realName=' + realName + '&tenantSex=' + tenantSex + '&ageGroup=' + ageGroup + '&cardType=' + cardType + '&cardNo=' + cardNo + '&yearOfBirth=' + yearOfBirth + '&monthOfBirth=' + monthOfBirth + '&dayOfBirth=' + dayOfBirth + '&mobile=' + mobile + '&phonecode=' + phonecode + '&random=' + new Date().getTime();
+    },
+    getWeb_FangKe_EditHaiwaiUserTenantUrl : function (tenantId,realName,tenantSex,ageGroup,cardType,cardNo,yearOfBirth,monthOfBirth,dayOfBirth,email) {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_UpdateUserTenant&tenantId=' + tenantId + '&realName=' + realName + '&tenantSex=' + tenantSex + '&ageGroup=' + ageGroup + '&cardType=' + cardType + '&cardNo=' + cardNo + '&yearOfBirth=' + yearOfBirth + '&monthOfBirth=' + monthOfBirth + '&dayOfBirth=' + dayOfBirth + '&email=' + email + '&random=' + new Date().getTime();
+    },
+    getWeb_GetCityUrl : function (provinceId) {
+        return 'http://'+domain+'/xzweb.php?op=Pub_SelCityJson&provinceid=' + provinceId ;
+    },
+    getFangDong_CutUserHeadImageFrameUrl : function (headImageUrl) {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_CutUserHeadImageFrame&headImageUrl='+headImageUrl;
+    },
+    /*07-03*/
+    getFangDong_SetNoticeSetUrl : function (smsLodgeunitSucc,smsBookorderTimeout,smsPayTimeout,smsNewComment,emailLodgeunitSucc,emailBookorderTimeout,emailPayTimeout,emailNewComment) {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_NoticeSetSub&sms_lodgeunitsucc='+smsLodgeunitSucc+'&sms_bookordertimeout='+smsBookorderTimeout+'&sms_paytimeout='+smsPayTimeout+'&sms_newcomment='+smsNewComment+'&email_lodgeunitsucc='+emailLodgeunitSucc+'&email_bookordertimeout='+emailBookorderTimeout+'&email_paytimeout='+emailPayTimeout+'&email_newcomment='+emailNewComment+'&random'+new Date().getTime();
+    },
+    getFangDong_OrderByStateUrl : function (orderState,pageNo,sortType) {
+        sortType = ('undefined' !== typeof sortType) ? sortType : "";
+        return 'http://'+domain+'/xzweb.php?op=FangDong_OrderByState&orderState='+orderState+'&sortType='+sortType+'&p='+pageNo+'&random='+new Date().getTime();
+    },
+    getFangDong_SetBankPaymentUrl : function (id, ownerId) {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_SetBankPayment&id='+id+'&ownerid='+ownerId;
+    },
+    getFangDong_SetAlipayPaymentUrl : function (id, ownerId) {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_SetAlipayPayment&id='+id+'&ownerid='+ownerId;
+    },
+    getFangDong_GetTenpayInfoUrl : function (id, ownerId) {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_GetTenpayInfo&id='+id+'&ownerid='+ownerId;
+    },
+    getFront_Login_KernelUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=Front_Login_Kernel';
+    },
+    getFront_Register_KernelUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=Front_Register_Kernel';
+    },
+    getFront_DetailPageMapUrl : function (luid) {
+        return 'http://'+domain+'/xzweb.php?op=Front_DetailPageMap&id='+luid;
+    },
+    getFront_Login_SubmitUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=Front_Login_Submit';
+    },
+    getFront_BookOrderPayFail : function (orderId) {
+        return 'http://'+domain+'/xzweb.php?op=Front_BookOrderPayFail&bookorderid='+orderId;
+    },
+
+    getAjax_RegisterWithPhoneAndPass : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_RegisterWithPhoneAndPass';
+    },
+    getAjax_SendCommentShareUrl : function (commentid, source) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SendCommentShare&commentid='+commentid+'&source='+source+'&random='+new Date().getTime();
+    },
+    getAjax_CommentShareUrl : function (commentid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CommentShare&commentid='+commentid+'&random='+new Date().getTime();
+    },
+    getAjax_CommentFangKeShareUrl : function (commentid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CommentFangKeShare&commentid='+commentid+'&random='+new Date().getTime();
+    },
+    getAjax_FangKe_BookOrder_RefundShowUrl : function (bookOrderId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_BookOrder_RefundShow&bookOrderId='+bookOrderId;
+    },
+    getAjax_SaveDefaultUserHeadImageUrl : function (imgId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SaveDefaultUserHeadImage&id='+imgId;
+    },
+    getAjax_SaveUserHeadImageUrl : function (imgurl, gcx, gcy, gcw, gch) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SaveUserHeadImage&imgurl='+encodeURIComponent(imgurl)+'&x='+gcx+'&y='+gcy+'&w='+gcw+'&h='+gch;
+    },
+    /*07-03*/
+    getAjax_PostReplyUrl : function (replycontent,rcid,commentType) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_PostReply&content='+replycontent+'&rcid='+rcid+'&commentType='+commentType;
+    },
+    getAjax_PostReplyShareUrl : function (replyid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_PostReplyShare&replyId='+replyid+'&random='+new Date().getTime();
+    },
+    getAjax_DelReplyUrl : function (replyid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_DelReply&data='+replyid;
+    },
+    getAjax_DelCommentUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_DelComment';
+    },
+    getAjax_BookOrderCancelReasonUrl : function (bookorderId, rejectType, rejectText) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_BookOrderCancelReason&bookorderid='+bookorderId+'&cancelType='+rejectType+'&cancelReason='+encodeURIComponent(rejectText);
+    },
+    getAjax_FangKe_CheckInCodeVerifyUrl : function (bookorderId,code) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_CheckInCodeVerify&orderid='+bookorderId+'&code='+code;
+    },
+    getAjax_DelUserPaymentUrl : function (id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_DelUserPayment&id='+id;
+    },
+    getAjax_BankCityJsonUrl : function (provinceId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_BankCityJson&provinceid='+provinceId;
+    },
+    getAjax_BankJsonUrl : function (bankName,bankProviceId,bankCityId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_BankJson&banktypeid='+bankName+'&bankprovinceid='+bankProviceId+'&bankcityid='+bankCityId;
+    },
+    getAjax_CheckTenpayInfoParam : function (tenpayno,tenpayusername) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckTenpayInfo&tenpayno='+tenpayno+'&tenpayusername='+tenpayusername;
+    },
+    getAjax_GetDefaultLandMarkUrl : function (cityDomain) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetDefaultLandMark&domain='+cityDomain;
+    },
+    /*08-19*/
+    getAjax_CheckLodgeUnitUrl : function (cityDomain) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckLodgeunit&luid='+cityDomain;
+    },
+    getAjax_CheckSearchConditionUrl : function (searchCity,cityDomain,startDate,endDate) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckSearchCondition&searchCity='+searchCity+"&cityDomain="+cityDomain+"&startDate="+startDate+"&endDate="+endDate;
+    },
+    getAjax_BuildFilterSearchUrl : function (partner,startDate,endDate,citydomain,putkey,keywordType,keywordValue,checkedHouseType,checkedfacilities,checkedrentType,guestnum,price) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_BuildFilterSearch&partner='+partner+'&startDate='+startDate+'&endDate='+endDate+'&citydomain='+citydomain+'&putkey='+putkey+'&keywordType='+keywordType+'&keywordValue='+keywordValue+'&housetyperoomcnt='+checkedHouseType+'&facilities='+checkedfacilities+'&leasetype='+checkedrentType+'&guestnum='+guestnum+'&price='+price; 
+    },
+    getAjax_GetDatas4Map : function (partner,startDate,endDate,city,putkey,district,landmark,checkedHouseType,checkedfacilities,checkedrentType,guestnum,lowprice,highprice,pageNo,sort) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetDatas4Map&partner='+partner+'&startDate='+startDate+'&endDate='+endDate+'&city='+city+'&putkey='+putkey+'&district='+district+'&landmark='+landmark+'&housetyperoomcnt='+checkedHouseType+'&facilities='+checkedfacilities+'&leasetype='+checkedrentType+'&guestnum='+guestnum+'&lowprice='+lowprice+'&highprice='+highprice+'&pageno='+pageNo+'&sort='+sort; 
+    },
+    getAjax_GetMapDatasLodgeUnit : function (partner,startDate,endDate,city,putkey,district,landmark,checkedHouseType,checkedfacilities,checkedrentType,guestnum,lowprice,highprice,pageNo,sort,radius,lat,lng) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetDatas4MapLodgeUnit&partner='+partner+'&startDate='+startDate+'&endDate='+endDate+'&city='+city+'&putkey='+putkey+'&district='+district+'&landmark='+landmark+'&housetyperoomcnt='+checkedHouseType+'&facilities='+checkedfacilities+'&leasetype='+checkedrentType+'&guestnum='+guestnum+'&lowprice='+lowprice+'&highprice='+highprice+'&pageno='+pageNo+'&sort='+sort+'&radius='+radius+'&lat='+lat+'&lng='+lng; 
+    },
+    getAjax_getDatasMapLodgeunit4Page : function (partner,startDate,endDate,city,putkey,district,landmark,checkedHouseType,checkedfacilities,checkedrentType,guestnum,lowprice,highprice,pageNo,sort,radius,lat,lng) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_getDatasMapLodgeunit4Page&partner='+partner+'&startDate='+startDate+'&endDate='+endDate+'&city='+city+'&putkey='+putkey+'&district='+district+'&landmark='+landmark+'&housetyperoomcnt='+checkedHouseType+'&facilities='+checkedfacilities+'&leasetype='+checkedrentType+'&guestnum='+guestnum+'&lowprice='+lowprice+'&highprice='+highprice+'&pageno='+pageNo+'&sort='+sort+'&radius='+radius+'&lat='+lat+'&lng='+lng; 
+    },
+    getAjax_doFullTextSearch4Map : function (offset,url) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_doFullTextSearch4Map&offset='+offset+'&url='+encodeURIComponent(url);
+    },
+    getAjax_GetBookLodgeUnitDetailUrl : function (lodgeId,sameRoomNum,startDate,endDate) {
+        return "http://"+domain+"/ajax.php?op=Ajax_GetBookLodgeUnitDetail&lodgeId="+lodgeId+"&sameRoomNum="+sameRoomNum+"&startdate="+startDate+"&enddate="+endDate+"&rand="+new Date().getTime();
+    },
+    getAjax_GetOrderPriceDetailUrl : function (bookOrderId) {
+        return "http://"+domain+"/ajax.php?op=Ajax_GetOrderPriceDetail&bookOrderId="+bookOrderId+"&rand="+new Date().getTime();
+    },
+    getAjax_GetLazyInfoUrl : function (memkey,memtimeout,turl) {
+        return "http://"+domain+"/ajax.php?op=Ajax_LoadInfo&memkey="+memkey+"&memtimeout="+memtimeout+"&turl="+turl;
+    },
+    getAjax_AddFeedbackUrl : function (problem,contact,imageParam) {
+        return "http://"+domain+"/ajax.php?op=Ajax_Add_Feedback&problem="+problem+"&contact="+contact+"&imageParam="+imageParam;
+    },
+    getAjax_GetFeedbackUrl : function () {
+        return "http://"+domain+"/ajax.php?op=Ajax_Get_Feedback";
+    },
+
+
+
+
+    getAjax_GetVerifyCode : function () {
+        return "http://"+domain+"/ajax.php?op=AJAX_GetVerifyCode&nocache="+new Date().getTime();
+    },
+    getAjax_CheckMobileExist : function (mobile) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckMobileExist&mobile=' + mobile;
+    },
+    getAjax_CheckRegistExist : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckRegistExist';
+    },
+    getAjax_CheckUsernameExist : function (username) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckUsernameExist&username=' + encodeURIComponent(username);
+    },
+    getAjax_CheckOldUsernameExist : function (username) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckOldUsernameExist&username=' + username;
+    },
+    getAjax_CheckEmailExist : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckEmailExist';
+    },
+    getAjax_CheckVerifyCode : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckVerifyCode';
+    },
+    getAjax_SendActivateCode : function (mobile, verifyCode) {
+        return 'http://'+domain+'/limajax/AJAX_SendActivateCode?mobile='+ mobile +'&verifycode='+ verifyCode + '&rand='+new Date().getTime();
+    },
+    getAjax_SendAmendPassCode : function (mobile, verifyCode) {
+        return 'http://'+domain+'/limajax/AJAX_SendAmendPassCode?mobile='+ mobile +'&verifycode='+ verifyCode + '&rand='+new Date().getTime();
+    },
+    getAjax_CheckActiveCode : function (mobile,activateCode) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckActivateCode&mobile='+mobile+'&activatecode='+activateCode +'&rand='+new Date().getTime();
+    },
+    getAjax_CheckInviteCode : function (inviteCode) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckInviteCode&invitecode='+inviteCode;
+    },
+    getAjax_SendConfirmCode : function (mobile, verifyCode) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_SendConfirmCode&mobile='+ mobile +'&verifycode='+ verifyCode + '&rand='+new Date().getTime();
+    },
+    getAjax_SendQuickLoginCode : function(mobile, verifyCode){
+        return 'http://'+domain+'/ajax.php?op=AJAX_SendQuickLoginCode&mobile='+ mobile +'&verifycode='+ verifyCode + '&rand='+new Date().getTime();
+    },
+    getAjax_CheckConfirmCode : function (mobile,confirmCode) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_CheckConfirmCode&mobile='+mobile+'&confirmcode='+confirmCode +'&rand='+new Date().getTime();
+    },
+    getAjax_VerifyCodeFirstShow : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_VerifyCodeFirstShow&rand='+new Date().getTime();
+    },
+    getAjax_Login : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_Login';
+    },
+    getAjax_LoginMobile : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_LoginMobile';
+    },
+    getAjax_RegisterByMobile : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_RegisterByMobile';
+    },
+    getAjax_RegisterByEmail : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_RegisterByEmail';
+    },
+    getAjax_FindPasswordByEmail : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_ResetPasswordByEmail';
+    },
+    getAjax_ResetPasswordFromEmail : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_ResetPasswordFromEmail';
+    },
+    getAjax_SendRegValidateEmailUrl : function(email,next){
+        return 'http://'+domain+'/ajax.php?op=AJAX_SendRegValidateEmail&email='+encodeURIComponent(email)+'&next='+encodeURIComponent(next)+'&random='+new Date().getTime();
+    },
+    getAjax_FindPasswordByMobile : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_ResetPasswordByMobile';
+    },
+    getAjax_AmendPasswordByMobile : function (){
+        return 'http://'+domain+'/ajax.php?op=AJAX_AmendPasswordByMobile';
+    },
+    getAjax_AmendPasswordByEmail : function (){
+        return 'http://'+domain+'/ajax.php?op=AJAX_AmendPasswordByEmail';
+    },
+    getAjax_BindOpenAccount : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_BindOpenAccount';
+    },
+    getAjax_OpenAccountRegister : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_OpenAccountRegister';
+    },
+    getAjax_ReSendActiveEmail : function (uid, uidtoken) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_ReSendActiveEmail&uid=' + uid + '&uidtoken=' + uidtoken;
+    },
+    getAjax_ChangeActiveEmail : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_ChangeActiveEmail';
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    getAjax_CheckNickNameUrlNoParam: function () {
+        return "http://"+domain+"/ajax.php?op=Ajax_CheckNickName";
+    },
+
+    getAjax_GetPicCheckCodeShowUrl : function () {
+        return "http://"+domain+"/ajax.php?op=AJAX_PicCheckCodeShow&nocache="+new Date().getTime();
+    },
+    getAjax_GetSendMessageAppDownloadUrl: function (mobile,checkcode) {
+        return "http://"+domain+"/ajax.php?op=Ajax_Send_Message_App_Download_Url&mobile="+mobile+"&checkcode="+checkcode+"&rand="+new Date().getTime();
+    },
+    getAjax_SendSms4AppDownloadUrl: function (mobile,checkcode,apptype) {
+        return "http://"+domain+"/ajax.php?op=Ajax_SendSms4AppDownload&mobile="+mobile+"&checkcode="+checkcode+"&apptype="+apptype+"&rand="+new Date().getTime();
+    },
+    getAjax_CheckUserPasswordUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckUserPassword';
+    },
+    getAjax_CheckPhone : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckPhone';
+    },
+    getAjax_CheckEmailUrl: function (email) {
+        return "http://"+domain+"/ajax.php?op=Ajax_CheckEmail&email="+email+"&random="+new Date().getTime();
+    },
+    getAjax_CheckEmailUrlNoParam: function () {
+        return "http://"+domain+"/ajax.php?op=Ajax_CheckEmail";
+    },
+    getAjax_SendActiveEmailUrl: function (email) {
+        return "http://"+domain+"/ajax.php?op=Ajax_Send_Active_Email&email="+email;
+    },
+    getAjax_ReadSysNoticeUrl: function (messageId) {
+        return "http://"+domain+"/ajax.php?op=Ajax_ReadSysNotice&msgId="+messageId;
+    },
+    getAjax_DelSysNoticeUrl : function (messageId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_DelSysNotice&msgId='+messageId;
+    },
+    getAjax_SetChatReplyUrl : function (replys) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetChatReply&data='+encodeURIComponent(replys)+'&_t='+new Date().getTime();
+    },
+    getAjax_ResetChatReplyUrl : function (replys) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_ResetChatReply&data='+encodeURIComponent(replys)+'&_t='+new Date().getTime();
+    },
+    getAjax_SmsCheckCodeSendUrl : function (phonenum,imagecode,aisle) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_SmsCheckCodeSend&phone='+phonenum+'&checkcode='+imagecode+'&aisle='+aisle;
+    },
+    getAjax_SetUserPhoneCodeUrl : function (phonenum,phonecode,type) {
+        if('undefined' !== typeof type)
+        {
+            return 'http://'+domain+'/ajax.php?op=Ajax_SetUserPhoneCode&phone='+phonenum+'&phonecode='+phonecode+'&type='+type;
+        }else
+        {
+            return 'http://'+domain+'/ajax.php?op=Ajax_SetUserPhoneCode&phone='+phonenum+'&phonecode='+phonecode;
+        }
+    },
+    getAjax_SmsCheckCodeVerifyUrl : function (phonenum,phonecode) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_SmsCheckCodeVerify&phone='+phonenum+'&phonecode='+phonecode;
+    },
+    getAjax_Front_SendPhoneCode : function (phonenum,imagecode,aisle) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SendPhoneCode&phone='+phonenum+'&checkcode='+imagecode+'&aisle='+aisle+'&rand='+new Date().getTime();
+    },
+    getAjax_Front_SendPhoneCodeByPhone : function (phonenum,imagecode,aisle) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_SendPhoneCodeByPhone&phone='+phonenum+'&checkcode='+imagecode+'&aisle='+aisle+'&rand='+new Date().getTime();
+    },
+    getAjax_PhoneIsNotExist_PhoneIsLoginUserUrl : function (phonenum) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_PhoneIsNotExist_PhoneIsLoginUser&phone='+phonenum;
+    },
+    getAjax_UnbindSnsOpenIdUrl : function (shareType) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_UnbindSnsOpenId&shareType='+shareType;
+    },
+    getAjax_FangKeOrderList_OrderByTimeUrl : function (ordertype, createtype, p) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKeOrderList_OrderByTime&orderType='+ordertype+'&bookOrderCreateType='+createtype+'&p='+p+'&random='+new Date().getTime();
+    },
+    getAjax_FangKe_BookOrder_RefundDetailUrl : function (bookOrderId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_BookOrder_RefundDetail&bookOrderId='+bookOrderId;
+    },
+    getAjax_FangKe_InsurancePlanUrl : function (bookOrderTenantId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_InsurancePlan&bookOrderTenantId='+bookOrderTenantId;
+    },
+    getAjax_FangKe_RejectCashPledgeUrl : function (bookOrderId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_RejectCashPledge&bookOrderId='+bookOrderId;
+    },
+    getAjax_FangKe_ConfirmCashPledgeUrl : function (bookOrderId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_ConfirmCashPledge&bookOrderId='+bookOrderId;
+    },
+    getAjax_FangKe_ServiceCashPledgeUrl : function (bookOrderId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_ServiceCashPledge&bookOrderId='+bookOrderId;
+    },
+
+    getAjax_GetMoreTalkUrl : function (talkid,rows,requestTime) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetMoreTalk&talkid='+talkid+'&rows='+rows+'&_t='+requestTime;
+    },
+    getAjax_GetSettleAccountDetailUrl : function (orderId,pageNo) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetSettleAccountDetail&orderId='+orderId+'&p='+pageNo;
+    },
+    getAjax_FangDong_LuPromotionConditionUrl : function (luid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangDong_LuPromotionCondition&luid='+luid+'&random='+new Date().getTime();
+    },
+    getAjax_FangDong_CancelPromotionUrl : function (luid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangDong_CancelPromotion&luid='+luid+'&random='+new Date().getTime();
+    },
+    getAjax_FangDong_SelfPromotionUrl : function (luid,avgprice,selfpromotiondiscount,enddate) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangDong_SelfPromotion&luid='+luid+'&avgPrice='+avgprice+'&discount='+selfpromotiondiscount+'&endDay='+enddate+'&random='+new Date().getTime();
+    },
+    getAjax_ConvertRedPackageUrl : function (userid,convertvalue) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_ConvertRedPackage&userid='+userid+'&convertvalue='+convertvalue+'&_t='+new Date().getTime();
+    },
+    getAjax_FangDong_TenantAuthentication2GuoZhengTongUrl : function (tenantid,realname,cardno) {
+        return "http://"+domain+"/ajax.php?op=Ajax_FangDong_TenantAuthentication2GuoZhengTong&tenantid="+tenantid+"&realname="+realname+"&cardno="+cardno;
+    },
+    getAjax_ShowNewLetterUrl : function (content) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_ShowNewLetter&content='+encodeURIComponent(content);
+    },
+    getAjax_DelTalkUrl : function (talkid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_DelTalk&delid='+talkid;
+    },
+    getAjax_SetTenpayInfoUrl : function (tenpayno,tenpayusername,balanceForm) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetTenpayInfo&tenpayno='+tenpayno+'&tenpayusername='+tenpayusername+'&balanceform='+balanceForm;
+    },
+    getAjax_CheckAlipayInfoUrl : function (alipayno,alipayusername) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckAlipayInfo&alipayno='+alipayno+'&alipayusername='+alipayusername;
+    },
+    getAjax_SaveAlipayInfoUrl : function (alipayno,alipayusername) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SaveAlipayInfo&alipayno='+alipayno+'&alipayusername='+alipayusername;
+    },
+    getAjax_SetAlipayInfoUrl : function (alipayno,alipayusername,balanceForm,id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetAlipayInfo&alipayno='+alipayno+'&alipayusername='+alipayusername+'&balanceform='+balanceForm+'&id='+id;
+    },
+    getAjax_SetDefaultUserPaymentUrl : function (id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetDefaultUserPayment&id='+id;
+    },
+    getAjax_SetNationalSecurityInfo : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetNationalSecurityInfo';
+    },
+    getAjax_FangDong_DelMyRoomsUrl : function (roomId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangDong_MyRooms_Del&lodgeunitid='+roomId;
+    },
+    getAjax_FangDong_MyRoomsSwithStateUrl : function (roomId,switchstr) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangDong_MyRooms_SwithState&lodgeunitid='+roomId+'&switchval='+switchstr+'&random='+new Date().getTime();
+    },
+    getAjax_FangDong_MyPartRoomsUrl : function (lodgeId,pageNo) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_FangDong_MyPartRooms&parentId='+lodgeId+'&p='+pageNo;
+    },
+    getAjax_SetLodgeUnitCalendarUrl : function (lodgeUnitId, startDate, endDate, subPrice, bookable, roomnum) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetLodgeUnitCalendar&lodgeunitid='+lodgeUnitId+'&startdate='+startDate+'&enddate='+endDate+'&price='+subPrice+'&bookable='+bookable+'&housenum='+roomnum+'&random='+new Date().getTime();
+    },
+    getAjax_GetLodgeUnitPromotionUrl : function (lodgeUnitId, startdate, enddate) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetLodgeUnitPromotion&lodgeunitid='+lodgeUnitId+'&startdate='+startdate+'&enddate='+enddate;
+    },
+    getAjax_GetLodgeUnitCalendarUrl : function (lodgeUnitId, startdate, enddate, vstartdate) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetLodgeUnitCalendar&lodgeunitid='+lodgeUnitId+'&startdate='+startdate+'&enddate='+enddate+'&editable=true&_vstartdate='+vstartdate+'&_t='+new Date().getTime();
+    },
+    getAjax_GetLodgeUnitCalendar : function (lodgeUnitId, startdate, enddate,calendarCode) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetLodgeUnitCalendar&lodgeunitid='+lodgeUnitId+'&startdate='+startdate+'&enddate='+enddate+'&calendarCode='+calendarCode+'&_t='+new Date().getTime();
+    },
+    getAjax_CheckCalendarVerifyCodeUrl : function(luId,verifyCode){
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckCalendarVerifyCode&luid='+luId+'&calendarCode='+verifyCode;
+    },
+    getAjax_SetLodgeUnitDayPriceUrl : function (lodgeUnitId, price) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetLodgeUnitDayPrice&lodgeunitid='+lodgeUnitId+'&price='+price+"&_t="+new Date().getTime();
+    },
+    getAjax_SetLodgeUnitWeekPriceUrl : function (lodgeUnitId, monValue,tueValue,wedValue,thuValue,friValue,satValue,sunValue,startDate,endDate) {
+        return "http://"+domain+"/ajax.php?op=Ajax_SetLodgeUnitWeekPrice&lodgeunitid="+lodgeUnitId+"&mon="+monValue+"&tue="+tueValue+"&wed="+wedValue+"&thu="+thuValue+"&fri="+friValue+"&sat="+satValue+"&sun="+sunValue+"&startdate="+startDate+"&enddate="+endDate+"&_t="+new Date().getTime();
+    },
+    getAjax_FangDong_WeekMonthPromotionUrl : function (lodgeUnitId, discountPerWeek,discountPerMonth) {
+        return "http://"+domain+"/ajax.php?op=Ajax_FangDong_WeekMonthPromotion&lodgeunitid="+lodgeUnitId+"&discountperweek="+discountPerWeek+"&discountpermonth="+discountPerMonth+"&_t="+new Date().getTime();
+    },
+    getAjax_SetLodgeUnitDateIntervalPriceUrl : function (lodgeUnitId, price) {
+        return "http://"+domain+"/ajax.php?op=Ajax_SetLodgeUnitDateIntervalPrice&lodgeunitid="+lodgeUnitId+"&price="+price+"&_t="+new Date().getTime();
+    },
+    getAjax_GetLodgeUnitPromotionUrl: function (lodgeUnitId, startdate, enddate) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetLodgeUnitPromotion&lodgeunitid='+lodgeUnitId+'&startdate='+startdate + '&enddate='+enddate;
+    },
+    getAjax_FangDong_EditOrderPriceUrl: function () {
+        return "http://"+domain+"/ajax.php?op=Ajax_FangDong_EditOrderPrice";
+    },
+    getAjax_Pub_GetStepPreviewUrl: function (step,houseId,roomId) {
+        return "http://"+domain+"/ajax.php?op=Ajax_Pub_GetStep"+step+"_Preview&houseId="+houseId+"&roomId="+roomId+"&_t="+new Date().getTime();
+    },
+    getAjax_Pub_GetStepEditUrl: function (step,houseId,roomId) {
+        return "http://"+domain+"/ajax.php?op=Ajax_Pub_GetStep"+step+"&houseId="+houseId+"&roomId="+roomId+"&_t="+new Date().getTime();
+    },
+    getAjax_FangKe_BookOrder_RefundSubmitUrl : function (bookOrderId, cancelBookOrderType, cancelBookOrderReason) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_BookOrder_RefundSubmit&bookOrderId='+bookOrderId+'&cancelBookOrderType='+cancelBookOrderType+'&cancelBookOrderReason=' + encodeURIComponent(cancelBookOrderReason);
+    },
+    getAjax_Pub_GetCityJson : function (province_id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_getCityJson&provinceid='+province_id+'&_t=' + new Date().getTime();
+    },
+    getAjax_Pub_GetDistrictJson : function (city_id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_getDistrictJson&cityid='+city_id+'&_t=' + new Date().getTime();
+    },
+    getAjax_Pub_GetStreetJson : function (district_id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_getLocaltion&districtid='+district_id+'&_t=' + new Date().getTime();
+    },
+    getAjax_Pub_CheckAlipayInfo : function (alipayno,alipayusername) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckAlipayInfo&alipayno='+alipayno+'&alipayusername='+encodeURIComponent(alipayusername);
+    },
+    getAjax_Pub_SaveAlipayInfo : function (alipayno,alipayusername) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SaveAlipayInfo&alipayno='+alipayno+'&alipayusername='+encodeURIComponent(alipayusername);
+    }, 
+    getAjax_Pub_SetAlipayInfo : function (alipayno,alipayusername,balanceForm) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetAlipayInfo';
+        //return 'http://'+domain+'/ajax.php?op=Ajax_SetAlipayInfo&alipayno='+alipayno+'&alipayusername='+alipayusername+'&alipaybalanceform='+balanceForm;
+    },
+    getAjax_Pub_PreBankPayMent_Submit : function (bankname,bankprovice,bankcity,bankaccountid,bankbranchname,pubpri,bankbranchtex,bankaccountname) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_PUB_PreBanckPayMent_Submit&bankname='+bankname+'&bankprovice='+bankprovice+'&bankcity='+bankcity+'&bankaccountid='+bankaccountid+'&bankbranchname='+bankbranchname+'&pubpri='+pubpri+'&bankbranchtext='+bankbranchtex+'&bankaccountname='+bankaccountname;
+    },
+    getAjax_Pub_Set_SelfPromotion : function (luid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_Set_SelfPromotion&luid='+luid;
+    },
+    getAjax_Pub_CutImage : function (url,width,height) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CutImage&key='+url+'&_w='+width+'&_h='+height;
+    },
+    getAjax_Pub_UploadCutAfterIamge : function (key,value) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_uploadCutAfterImage&key='+key+'&value='+value;
+    },
+    getAjax_Pub_PreGetUserHeadImg : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_PUB_PreGetUserHeadImg';
+    },
+    getPub_Step1_SubmitSave : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_HouseDetail_Submit';
+    },
+    getPub_Step1_RoomBase_SubmitSave : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_RoomBase_Submit';
+    },
+    getPub_Step2_SubmitSave : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_RoomDetail_Submit';
+    },
+    getPub_Step3_SubmitSave : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_RoomFacilities_Submit';
+    },
+    getPub_Step4_SubmitSave : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_RoomPicture_Submit';
+    },
+    getPub_Step5_SubmitSave : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_RoomPrice_SubmitSave';
+    },
+    getAjax_RoomProcessPass : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_RoomProcessPass&roomId='+roomId;
+    },
+    getPub_HouseDetail : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_GetStep1map&roomId='+roomId;
+    },
+    getPub_PreviewHouseDetail : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_GetStep1map_Preview&roomId='+roomId;
+    },
+    getPub_PreviewHouseRoomDetail : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_PreviewHouseRoomDetail&roomId='+roomId;
+    },
+    getPub_Preview_HouseRoomDetail : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_Preview_HouseRoomDetail&roomId='+roomId;
+    },
+    getPub_PreviewDetail : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_PreviewDetail&roomId='+roomId;
+    },
+    getPub_Preview_RoomDetail : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_Preview_RoomDetail&roomId='+roomId;
+    },
+    getPub_PreviewFacilities : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_PreviewFacilities&roomId='+roomId;
+    },
+    getPub_Preview_RoomFacilities : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_Preview_RoomFacilities&roomId='+roomId;
+    },
+    getPub_PreviewPicture : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_PreviewPicture&roomId='+roomId;
+    },
+    getPub_Preview_RoomPicture : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_Preview_RoomPicture&roomId='+roomId;
+    },
+    getPub_PreviewPrice : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_PreviewPrice&roomId='+roomId+'&room_type=2';
+    },
+    getPub_Preview_Price : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_Preview_RoomPrice&roomId='+roomId;
+    },
+    getPub_PreviewPriceQequest : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_PreviewPriceQequest&roomId='+roomId+'&room_type=3';
+    },
+    getPub_Preview_PriceQequest : function(roomId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_Preview_RoomPriceQequest&roomId='+roomId;
+    },
+    getPub_Preview_Success : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_Preview_Success';
+    },
+    getPub_LodgeUnitSite : function(houseId){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_GetLodgeUnitSite&houseId='+houseId+'&rand='+Math.random();
+    },
+    getPub_LodgeUnitSite_Save : function(houseId,provinceId,cityId,districtId,inputAddress,latlng,doorNumber){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_GetLodgeUnitSite_Save&houseId='+houseId+'&provinceId='+provinceId+'&cityId='+cityId+'&districtId='+districtId+'&inputAddress='+inputAddress+'&latlng='+latlng+'&doorNumber='+doorNumber+'&rand='+Math.random();
+    },
+    getPub_EditAddress : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_Pub_EditAddress';
+    },
+    getFront_Map_GetMapData : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetMapData';
+    },
+    getFront_Map_GetSubway4Map : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetSubway4Map';
+    },
+    getFront_Map_CheckSearchCondition : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CheckSearchCondition';
+    },
+    getAjax_Map_GetLandMarkSuggestion : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_getLandMarkSuggestion';
+    },
+    getAjax_FangDong_SetAutoCheck : function (isAutoCheck) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetAutoCheck&isAutoCheck=' + isAutoCheck;
+    },
+    getAjax_Front_GetCancelRule : function (luid,roomNum,startDate,endDate) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_GetCancelRule&luid='+luid+'&roomNum='+roomNum+'&startdate='+startDate+'&enddate='+endDate+'&rand='+new Date().getTime();
+    },
+    getAjax_Front_GetBookAbleRoomNum : function (lodgeId,startDate,endDate) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetBookAbleRoomNum&lodgeunitid='+lodgeId+'&startdate='+startDate+'&enddate='+endDate;
+    },
+    getAjax_Front_GetRoomBookAble : function (lodgeId,sameRoomNum,startDate,endDate,bookOrderId,version) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetRoomBookAble&lodgeId='+lodgeId+'&sameRoomNum='+sameRoomNum+'&startdate='+startDate+'&enddate='+endDate+'&bookorderid='+bookOrderId+'&version='+version+'&rand='+new Date().getTime();
+    },
+    getAjax_Front_GetTotalPrice4BookOrder : function (lodgeId,sameRoomNum,startDate,endDate) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetTotalPrice4BookOrder&lodgeId='+lodgeId+'&sameRoomNum='+sameRoomNum+'&startdate='+startDate+'&enddate='+endDate+'&rand='+Math.floor(Math.random()*10000);
+    },
+    getAjax_Front_PicCheckCodeVerify : function (checkcode,phone) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_PicCheckCodeVerify&checkcode='+checkcode+'&phone='+phone;
+    },
+    getAjax_Front_UpdateLoginUser : function (name,sex) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_UpdateLoginUser&realName='+encodeURIComponent(name)+'&sex='+sex+'&random='+new Date().getTime();
+    },
+    getAjax_Front_PhoneIsLoginUser : function (mobile,name,sex) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_PhoneIsLoginUser&mobile='+mobile+'&realName='+encodeURIComponent(name)+'&sex='+sex+'&random='+new Date().getTime();
+    },
+    getAjax_Front_CollegeStudentShare : function (status,image,state,objId,objType,friendName,phone,phonecode,email) {
+        return 'http://'+domain+'/ajax.php?op=SendCollegeStudentShare&status='+status+'&image='+image+'&state='+state+'&objId='+objId+'&objType='+objType+'&friendName='+friendName+"&phone="+phone+"&phonecode="+phonecode+"&email="+email;
+    },
+    getAjax_Front_PhoneIsNotExist_PhoneIsLoginUser : function (value) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_PhoneIsNotExist_PhoneIsLoginUser&phone='+value+'&rand='+new Date().getTime();
+    },
+    getAjax_Front_GaoXiao_RoomComment : function (luid) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetComment4GaoXiao&luid='+luid;
+    },
+    getWeb_FangDong_CommentUrl : function (filter) {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_Comment&filter='+filter;
+    },
+    getAjax_Front_UserTenantList : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangKe_UserTenant&rand='+new Date().getTime();
+    },
+    getWeb_FangKe_CommentUrl : function () {
+        return 'http://'+domain+'/xzweb.php?op=FangKe_Comment';
+    },
+    getAjax_UserReal_RenZheng : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_UserReal_RenZheng';
+    },
+    getAjax_FD_DelDiaryUrl : function (id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_DelDiary&id='+id;
+    },
+    getAJAX_FD_RealNameVerifyImgSubUrl : function (data,flag) {
+        return 'http://'+domain+'/ajax.php?op=AJAX_FD_RealNameVerifyImgSub&data=' + data +"&flag=" + flag;
+    },
+    getFangDong_CutSpecialHeadImageFrameUrl : function (imageUrl,markdw,markdh) {
+        return 'http://'+domain+'/xzweb.php?op=FangDong_CutSpecialHeadImageFrame&imageUrl=' + imageUrl + '&markdw=' + markdw + '&markdh=' + markdh;
+    },
+    getAjax_FD_SaveSpecialHeadImage : function (cutx,cuty,cutw,cuth,oriw,orih,oriurl,cutbkgw,cutbkgh,imgIntro) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_SaveSpecialHeadImage&cutx=' + cutx +"&cuty=" + cuty + "&cutw=" + cutw + "&cuth=" + cuth + "&oriw=" + oriw + "&orih=" + orih + "&oriurl=" + oriurl + "&cutbkgw=" + cutbkgw + "&cutbkgh=" + cutbkgh + "&imgIntro=" + encodeURIComponent(imgIntro);
+    },
+    getAjax_FD_DiaryCountUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_DiaryCount';
+    },
+    getAjax_FD_Special_OfflineUrl : function (id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_Special_Offline&id=' + id;
+    },
+    getAjax_FD_Special_OnlineUrl : function (id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_Special_Online&id=' + id;
+    },
+    getAjax_FD_RealNameVerifySubUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_RealNameVerifySub';
+    },
+    getAjax_FD_Diary_ToTopUrl : function (id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_Diary_ToTop&id=' + id;
+    },
+    getAjax_FD_Diary_ToTop_CountUrl : function (id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_Diary_ToTop_Count';
+    },
+    getFDDiaryUploadImgUrl : function () {
+        return 'http://'+domain+'/imgin4ImageText.php';
+    },
+    getAjax_GetTenantTagsUrl: function (tenantId) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetTenantTags&tenantid=' + tenantId;
+    },
+    getAjax_UpdateSelfIntroUrl: function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_UpdateSelfIntro';
+    },
+    getAjax_UpdateCheckInInfoDisplayTypeUrl: function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_UpdateCheckInInfoDisplayType';
+    },
+    getAjax_GetTenantSpecialHeadImgsUrl: function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetTenantSpecialHeadImgUrl';
+    },
+    getAjax_SetTenantSpecialHeadImgUrl: function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetTenantSpecialHeadImgUrl';
+    },
+    getAjax_SearchLodgeUnit : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SearchLodgeUnit';
+    },
+    getWeb_NeedPub: function (cityDomain, startDate, endDate) {
+        return 'http://'+domain+'/xzweb.php?op=Front_Need_Pub&startDate='+startDate+'&endDate='+endDate+'&searchcity='+cityDomain;
+    },
+    getWeb_NeedPubSubmit : function () {
+        return 'http://'+domain+'/xzweb.php?op=Front_Need_Pub_Submit';
+    },
+    getAjax_SetTenantNeedResponseStatus : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetTenantNeedResponseStatus';
+    },
+    getAjax_SetTenantNeedTimeOutStatus : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetTenantNeedTimeOutStatus';
+    },
+    getAjax_NeedLodgeunit : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_getNeedLodgeunit';
+    },
+    getAjax_NeedLandlord : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_getNeedLandlord';
+    },
+    getAjax_ValidNeedCount : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_ValidNeedCount';
+    },
+    getFront_Login : function (next) {
+        return 'http://'+topLevelDomain+'/login?next='+next;
+    },
+    getAjax_MakeAgeInfo : function (year,month,day) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_MakeAgeInfo&year='+year+'&month='+month+'&day='+day;
+    },
+    getAjax_CookieNoSubmitUsernameAndEmail : function (username,email) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_CookieNoSubmitUsernameAndEmail&username='+username+'&email='+email;
+    },
+    getAjax_IncreaseGuideVisits : function (guideType) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_IncreaseGuideVisits&type='+guideType+'&random='+ new Date().getTime();
+    },
+    getAjax_FK_OperatorTenantNeedOrderUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FK_OperatorTenantNeedOrder';
+    },
+    getAjax_FD_OperatorTenantNeedOrderUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FD_OperatorTenantNeedOrder';
+    },
+    getAjax_GetTenantNeedOrderPriceDetailUrl : function (id) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetTenantNeedOrderPriceDetail&tenantNeedOrderId=' + id + "&rand="+new Date().getTime();
+    },
+    getAJAX_TenantNeedOrderPaySynLockCheckUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=AJAX_TenantNeedOrderPaySynLockCheck';
+    },
+    getAjax_FD_EditTenantNeedOrderPriceUrl: function () {
+        return "http://"+domain+"/ajax.php?op=Ajax_FD_EditTenantNeedOrderPrice";
+    },
+    getAjax_InviteFriendByEmailUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_InviteFriendByEmail';
+    },
+    getAjax_GetReferrerLandlordsUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetReferrerLandlords';
+    },
+    getAjax_doSettleUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_doSettle';
+    },
+    getAjax_SetBankPaymentSubUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_SetBankPaymentSub';
+    },
+    getAjax_setAlipaymentSubUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_setAlipaymentSub';
+    },
+    getAjax_TenantDoSettleUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_TenantDoSettle';
+    },
+    getAjax_LandlordDirectsellSettleRecordDataUrl : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_GetLandlordDirectsellSettleRecordData';
+    },
+    getAjax_ShareAfter : function (objId,objType,shareContentType,channel) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_ShareAfter&objid='+objId+'&objtype='+objType+'&sharecontenttype='+shareContentType+'&channel='+channel;
+    },
+    getAjax_Exam : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_do_FangDong_Examination';
+    },
+    getAjax_Add_Cui : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangDong_Special_Add_Urge';
+    },
+    getAjax_FangkeInBlackList : function (mobile,cardNo) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_FangkeInBlackList&mobile='+mobile+'&cardNo='+cardNo;
+    },
+    getAjax_BookOrder_EditUserInfo : function (password,nickname) {
+        return 'http://'+domain+'/ajax.php?op=Ajax_BookOrder_EditUserInfo&password='+password+'&nickname='+nickname;
+    },
+    getAjax_jsErrorLogger : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_JsErrorLogger';
+    },
+    getAjax_BookOrder_CheckState : function (lodgeId,sameRoomNum,startDate,endDate,bookOrderId,version) {
+        return "http://"+domain+"/ajax.php?op=Ajax_BookOrder_CheckState&luid="+lodgeId+"&roomnum="+sameRoomNum+"&startdate="+startDate+"&enddate="+endDate+'&bookOrderId='+bookOrderId+'&version='+version+"&rand="+new Date().getTime();
+    },
+    getAjax_1yuanAutumnStatus : function () {
+        return "http://"+domain+"/ajax.php?op=autumnDeep1yuanInStatus&time="+new Date().getTime();
+    },
+    getAjax_Add_Zan : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_Add_Zan';
+    },
+    getAjax_sendCoupon4AprilFoolDay : function () {
+        return 'http://'+domain+'/ajax.php?op=Ajax_sendCoupon4AprilFoolDay';
+    },
+    getAjax_BookPayIntegralCoupon : function (bookorderid){
+       return 'http://'+domain+'/ajax.php?op=Ajax_BookPayIntegralCoupon&bookorderid='+bookorderid;  
+    },
+    getAjax_CouponInfo: function (couponid){
+       return 'http://'+domain+'/ajax.php?op=Ajax_GetCouponInfo&couponid='+couponid;    
+    },
+    getAjax_BookPayAbleCoupon: function (bookorderid){
+       return 'http://'+domain+'/ajax.php?op=Ajax_BookPayAbleCoupon&bookorderid='+bookorderid;    
+    },
+    getWeb_FangKe_CheckCommentUrl: function (bookorderid){
+       return 'http://'+domain+'/ajax.php?op=Ajax_CommitCheck&bookorderid='+bookorderid;    
+    },
+    getAddBillSubUrl : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_FK_AddBillSub';
+    },
+    getUserBillHistoryUrl : function(pageNum){
+        return 'http://'+domain+'/ajax.php?op=Ajax_FK_BillHis&p='+pageNum+'&rand='+Math.random();
+    },
+    getCancelBillUrl : function(id){
+        return 'http://'+domain+'/ajax.php?op=Ajax_FK_BillCancel&id='+id;
+    },
+    getAddBillUrl : function(){
+        return 'http://'+domain+'/ajax.php?op=Ajax_FK_AddBill&rand='+Math.random();
+    },
+    getAjax_drawLottery4NoonBreakUrl : function (district,address){
+        return 'http://'+domain+'/ajax.php?op=Ajax_DrawLottery4NoonBreak&district='+district+'&address='+address+'&rand='+Math.random();
+    },
+    getAjax_getNoonBreakAwardUrl : function (name,mobile,sleepTime){
+        if(name && mobile && sleepTime){
+            return 'http://'+domain+'/ajax.php?op=Ajax_getNoonBreakAward&name='+encodeURI(name)+'&mobile='+mobile+'&sleepTime='+sleepTime+'&rand='+Math.random();
+        } else {
+            return 'http://'+domain+'/ajax.php?op=Ajax_getNoonBreakAward&rand='+Math.random();
+        }
+    },
+    getAjax_getAvaliableCarBedUrl : function (){
+        return 'http://'+domain+'/ajax.php?op=Ajax_getAvaliableCarBed&rand='+Math.random();
+    },
+    getAjax_LuckerList4NoonBreakUrl : function (){
+        return 'http://'+domain+'/ajax.php?op=Ajax_LuckerList4NoonBreak&rand='+Math.random();
+    },
+    getAjaxAddFavorite: function (loginUserid,lodgeUnitId){
+       return 'http://'+domain+'/ajax.php?op=Ajax_AddFavorite&loginUserid='+loginUserid+'&lodgeUnitId='+lodgeUnitId+'&rand='+new Date().getTime();    
+    },
+    getAjaxCancelFavorite: function (lodgeUnitId){
+       return 'http://'+domain+'/ajax.php?op=Ajax_CancelFavorite&lodgeUnitId='+lodgeUnitId+'&rand='+new Date().getTime();    
+    },
+    getAjaxGetZhiMaNoCashPledgeList: function (cityId){
+       return 'http://'+domain+'/ajax.php?op=Ajax_getZhiMaNoCashPledgeList&cityId='+cityId+'&rand='+new Date().getTime();    
+    },
+    getAjaxApplyCashPledgeByLandlordUrl : function(bookOrderId,pledge2Landlord,reason){
+       return 'http://'+domain+'/ajax.php?op=Ajax_FD_ApplyCashPledge&bookOrderId='+bookOrderId+'&pledge2Landlord='+pledge2Landlord+'&reason='+encodeURIComponent(reason)+'&rand='+new Date().getTime();
+    },
+    getAjaxCancelCashPledgeByLandlordUrl : function(bookOrderId){
+       return 'http://'+domain+'/ajax.php?op=Ajax_FD_CancelCashPledge&bookOrderId='+bookOrderId+'&rand='+new Date().getTime();
+    },
+    getAjaxApplyServiceByLandlordUrl : function(bookOrderId){
+       return 'http://'+domain+'/ajax.php?op=Ajax_FD_ApplyService4CashPledge&bookOrderId='+bookOrderId+'&rand='+new Date().getTime();
+    },
+    getReturnCashPledgeUrl : function(bookOrderId){
+       return 'http://'+domain+'/ajax.php?op=Ajax_FD_ReturnCashPledge&bookOrderId='+bookOrderId+'&rand='+new Date().getTime();
+    },
+    getAJAX_GetLodgeUnitCalendar : function (luid,startDate,endDate,editable,calendarCode){
+        return 'http://'+domain+'/ajax.php?op=AJAX_GetLodgeUnitCalendar&lodgeunitid='+luid+'&startdate='+startDate+'&enddate='+endDate+'&editable='+editable+'&calendarCode='+calendarCode+'&rand='+Math.random();
+    },
+    getAJAX_ActivitySanyaXiamen : function (){
+        return 'http://'+domain+'/yunying.php?op=YunYing_luckyDraw&rand='+Math.random();
+    },
+    getAJAX_ActivitySanyaXiamenShare : function (){
+        return 'http://'+domain+'/yunying.php?op=YunYing_shareLuckyDraw&rand='+Math.random();
+    },
+    getAJAX_applyCleanService : function (){
+        return 'http://'+domain+'/ajax.php?op=Ajax_applyCleanService';
+    },
+    getAJAX_getMsCoupon : function (){
+        return 'http://'+domain+'/ajax.php?op=Ajax_getMsCoupon';
+    }
+
+    
+};
+ 
+ var xzRegularExpression={a:1,isNum:/^\d{1,}$/,isMobile:/^\d{11}$/,isUsername:/^[\w|\u4E00-\u9FA5]*$/,simpleMobile:/^\d{11}$/,mobile:/^1((3[0-9])|(4[57])|(5[0-35-9])|(7[36780])|(8[0-9]))\d{8}$/,password:/^[0-9a-zA-Z*!@.\-? : ;|$#%^&()_+=\[\]\\\/{}<>",~`']{0,}$/,numbers:/[1-9][0-9]{4}/,simpleEmail:/^.*?@.+$/,email:/^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)+[a-zA-Z]+$/,passport:/^[\d\w]{4,20}$/}; 
+ var _keywordValue = '';
+var districtSearchKey = 'E';
+
+function getFullDate(date){
+    var _FullDate = date;
+    if(date < 10)
+        _FullDate = 0 + String(date);
+
+    return _FullDate;
+}
+function searchCity(pageType)
+{
+   if($('#actionname').val()=='Front_Search'){
+     var searchCity = $('#searchcityd').attr("value");
+   }else{
+     var searchCity = $('#searchcity').attr("value");
+   }
+   
+    var cityDomain = $('#citydomain').attr("value");
+    var suggestion_cityDomain = $('#suggestion_citydomain').attr("value");
+    if(suggestion_cityDomain != "")
+        cityDomain = suggestion_cityDomain;
+    var searchKey = $('#searchkey').val();//api name
+    var searchPutKey = $('#keyword').val();//user set word
+    var searchLid = $('#landmarkid').val();
+    var landmarktype = $('#landmarktype').val();
+    var defaulturl = $('#defaulturl').val();
+    var isOpenBlank = $('#isopenblank').val();
+    var jumpUrl = '';
+    if(searchKey == _keywordValue)
+        searchKey = '';
+    if(searchPutKey == _keywordValue || searchPutKey=='输入地点...')
+        searchPutKey = '';
+
+    if(!searchCity || searchCity =='请选择城市或目的地')
+    {
+        $('#tip_searchcity').html("请选择城市或目的地");
+        $('#tip_searchcity').show();
+        return ;
+    }
+    searchCity = encodeURI(searchCity); 
+    var startDate = $('#startdate').attr('value');
+    var endDate = $('#enddate').attr('value');
+
+    var abtest_ABTest4SearchDate = getCookie('abtest_ABTest4SearchDate');
+    if (abtest_ABTest4SearchDate == 'b')
+    {
+        if((startDate == '' || startDate == '请选择入住日期') && (endDate == ''|| endDate == '请选择退房日期'))
+        {
+            startDate = '';
+            endDate = '';
+            deleteCookie('startDate','/','.'+topLevelDomain);
+            deleteCookie('endDate','/','.'+topLevelDomain);
+        }
+        else if(startDate == '请选择入住日期' || startDate.length < 1 )
+        {
+            $('#startdate').css('color','red').fadeOut('slow').fadeIn("slow").fadeOut("slow").fadeIn("slow",function(){
+                    $(this).css('color','')
+                    });
+            return ;
+        }
+        else if(endDate == '请选择退房日期' || endDate.length < 1)
+        { 
+            $('#enddate').css('color','red').fadeOut('slow').fadeIn("slow").fadeOut("slow").fadeIn("slow",function(){
+                    $(this).css('color','')
+                    });
+            return ;
+        }
+    }
+    else
+    {
+        if((startDate == '请选择入住日期' && endDate == '请选择退房日期') || (startDate.length < 1 && endDate.length < 1))
+        {
+            $('#startdate').css('color','red').fadeOut('slow').fadeIn("slow").fadeOut("slow").fadeIn("slow",function(){
+                    $(this).css('color','')
+                    });
+            $('#enddate').css('color','red').fadeOut('slow').fadeIn("slow").fadeOut("slow").fadeIn("slow",function(){
+                    $(this).css('color','')
+                    });
+            $('#calendar_btn_s').click();
+            return ;
+        }
+        else if(startDate == '请选择入住日期' || startDate.length < 1 )
+        {
+            $('#startdate').css('color','red').fadeOut('slow').fadeIn("slow").fadeOut("slow").fadeIn("slow",function(){
+                    $(this).css('color','')
+                    });
+            return ;
+        }
+        else if(endDate == '请选择退房日期' || endDate.length < 1)
+        { 
+            $('#enddate').css('color','red').fadeOut('slow').fadeIn("slow").fadeOut("slow").fadeIn("slow",function(){
+                    $(this).css('color','')
+                    });
+            return ;
+        }
+    }
+    var   type="^[0-9]*[1-9][0-9]*$";
+    var   re   =   new   RegExp(type);
+
+
+    if(searchCity.match(re) != null)
+    {
+        $.ajax({
+            type:"get",
+            url:XZWebUrlWriter.getAjax_CheckLodgeUnitUrl(searchCity),
+            async : false,
+            success:function(data){
+               if(data)
+               {
+                   var obj = eval("("+data+")");
+                    if(obj['error'] == '1')
+                   {
+                        $('#tip_searchcity').html(obj['errormsg']);
+                        $('#tip_searchcity').show();
+                        return;
+                   }else
+                    {
+                        if(isOpenBlank == '1')
+                        {
+                            openNewPage(obj['detailurl']);
+                        }else
+                        {
+                            location.href = obj['detailurl'];
+                        }
+                        return;
+                    }
+               }
+                
+            }
+            
+        })
+    }else
+   {
+    if(pageType == 'search')
+        cityDomain = '';
+    $.ajax({
+        type: "get",
+        url:XZWebUrlWriter.getAjax_CheckSearchConditionUrl(searchCity,cityDomain,startDate,endDate),
+        async : false,
+        success: function(data) {
+            if(data)
+            {
+                var dataObj = eval("("+data+")");
+                if(dataObj['error'] == '1')
+                {
+                    if(dataObj['cityInfo'])
+                {
+                    $('#tip_searchcity').html(dataObj['cityInfo']);
+                    $('#tip_searchcity').show();
+                };
+                if(dataObj['dateInfo'])
+                {       
+                    $('#tip_enddate').html(dataObj['dateInfo']);
+                    $('#tip_enddate').show();
+                };
+                //setTimeout(function() { $('#tip_searchcity').hide() }, 4000);
+                 setTimeout(function() { $('#tip_enddate').hide() }, 4010);
+                 if($('#actionname').val()=='Front_Search'){
+                        alert('对不起，没有找到相应的结果');
+                        location.reload();
+                      }
+                }
+                else
+                {
+                    var city = dataObj['city'] ;
+                    var paramArray = new Array();
+                    var paramStr = '';
+                    if(startDate != '')
+                    {
+                        paramArray.push('startDate='+startDate);
+                    }
+                    if(endDate != '')
+                    {
+                        paramArray.push('endDate='+endDate);
+                    }
+                    if(searchPutKey != '' && searchPutKey != null && landmarktype != districtSearchKey)
+                    {
+                        paramArray.push('putkey='+encodeURIComponent(ignoreSpaces(searchPutKey)));
+                    }
+                    else if(searchKey != '' && searchKey != null && landmarktype != districtSearchKey)
+                    {
+                        paramArray.push('putkey='+encodeURIComponent(ignoreSpaces(searchKey)));
+                    }
+
+                    
+                    paramStr = paramArray.join('&');
+                    if(landmarktype == districtSearchKey)
+                    {
+                        defaulturl = searchLid+"-duanzufang-8/";
+                        if(paramStr)
+                            defaulturl += "?";
+                        jumpUrl = "http://" + city + "." + topLevelDomain + "/" + defaulturl+paramStr;
+                        if(isOpenBlank == '1')
+                        {
+                            openNewPage(jumpUrl);
+                        }else
+                        {
+                            location.href = jumpUrl;
+                        }
+                        return false;
+                    }
+                    if(defaulturl)
+                    {
+                        defaulturl += "-duanzufang-20/";
+                        if(paramStr)
+                            defaulturl += "?";
+                        jumpUrl = "http://" + city + "." + topLevelDomain + "/" + defaulturl+paramStr;
+                        if(isOpenBlank == '1')
+                        {
+                            openNewPage(jumpUrl);
+                        }else
+                        {
+                            location.href = jumpUrl;
+                        }
+                        return false;
+                    }
+
+                    if(startDate != '' || endDate != '')
+                        paramStr = paramArray.join('&');
+                    if(paramStr !='')
+                    {
+                        if(searchLid)
+                        {
+                            if(searchKey)
+                                var paramVal = encodeURIComponent(searchKey) + "_" + searchLid + "S-duanzufang-20/"; 
+                            else if(searchPutKey)
+                                var paramVal = encodeURIComponent(ignoreSpaces(searchPutKey)) + "_" + searchLid + "M-duanzufang-20/"; 
+
+                            jumpUrl = "http://"+city+'.'+topLevelDomain+"/"+paramVal+'?'+paramStr;
+;
+                            if(isOpenBlank == '1')
+                            {
+                                openNewPage(jumpUrl);
+                            }else
+                            {
+                                location.href = jumpUrl;
+                            }
+                        }
+                        else
+                        {
+                            var paramVal = "";
+                            if(searchPutKey)
+                            {
+                                paramVal = encodeURIComponent(ignoreSpaces(searchPutKey)) + "_M-duanzufang-20/"; 
+                            }
+                            jumpUrl = "http://"+city+'.'+topLevelDomain+"/"+paramVal+'?'+paramStr;
+
+                            if(isOpenBlank == '1')
+                            {
+                                openNewPage(jumpUrl);
+                            }else
+                            {
+                                location.href = jumpUrl;
+                            }
+                        }
+                    }
+                    else 
+                    {
+                        if(!searchLid && searchPutKey)
+                        {
+                            var paramVal = encodeURIComponent(ignoreSpaces(searchPutKey)) + "_M-duanzufang-20/"; 
+                            jumpUrl = "http://"+city+'.'+topLevelDomain+"/"+paramVal+'?'+paramStr;
+                            if(isOpenBlank == '1')
+                            {
+                                openNewPage(jumpUrl);
+                            }else
+                            {
+                                location.href = jumpUrl;
+                            }
+                        }
+                        else if(searchLid && (searchPutKey || searchKey))
+                        {
+                            if(searchKey)
+                                var paramVal = encodeURIComponent(ignoreSpaces(searchKey)) + "_" + searchLid + "S-duanzufang-20/"; 
+                            if(searchPutKey)
+                                var paramVal = encodeURIComponent(ignoreSpaces(searchPutKey)) + "_" + searchLid + "M-duanzufang-20/"; 
+                            jumpUrl = "http://"+city+'.'+topLevelDomain+"/"+paramVal+'?'+paramStr;
+                            if(isOpenBlank == '1')
+                            {
+                                openNewPage(jumpUrl);
+                            }else
+                            {
+                                location.href = jumpUrl;
+                            }
+                        }
+                        else
+                        {
+                            jumpUrl = "http://"+city+'.'+topLevelDomain+"/";
+                            if(isOpenBlank == '1')
+                            {
+                                openNewPage(jumpUrl);
+                            }else
+                            {
+                                location.href = jumpUrl;
+                            }
+
+                        }
+                    }
+                }
+            }
+        }
+    });
+   }
+}
+
+function debug(str){
+    if(window.console){
+        console.debug(str);
+        return;
+    }
+
+    var d = $('#debug');
+    if(d.length == 0){
+        $(document.body).append('<div id="debug"></div>');
+        d = $('#debug');
+    }
+
+    var item = $('<div></div>').text(str);
+    d.append(item);
+}
+//compare date
+function compareDate(date){
+    var newDate = date.split("-");
+    var dateY = newDate[0];
+    var dateM = newDate[1];
+    var dateD = newDate[2];
+    return Date.parse(dateM + "/" + dateD + "/" + dateY);
+}
+
+function checkBankCardNo(bankno){
+    var lastNum=bankno.substr(bankno.length-1,1);
+
+    var first15Num=bankno.substr(0,bankno.length-1);
+    var newArr=new Array();
+    for(var i=first15Num.length-1;i>-1;i--){   
+        newArr.push(first15Num.substr(i,1));
+    }
+    var arrJiShu=new Array();  
+    var arrJiShu2=new Array(); 
+
+    var arrOuShu=new Array();  
+    for(var j=0;j<newArr.length;j++){
+        if((j+1)%2==1){
+            if(parseInt(newArr[j])*2<9)
+                arrJiShu.push(parseInt(newArr[j])*2);
+            else
+                arrJiShu2.push(parseInt(newArr[j])*2);
+        }
+        else 
+            arrOuShu.push(newArr[j]);
+    }
+
+    var jishu_child1=new Array();
+    var jishu_child2=new Array();
+    for(var h=0;h<arrJiShu2.length;h++){
+        jishu_child1.push(parseInt(arrJiShu2[h])%10);
+        jishu_child2.push(parseInt(arrJiShu2[h])/10);
+    }       
+
+    var sumJiShu=0; 
+    var sumOuShu=0; 
+    var sumJiShuChild1=0; 
+    var sumJiShuChild2=0; 
+    var sumTotal=0;
+    for(var m=0;m<arrJiShu.length;m++){
+        sumJiShu=sumJiShu+parseInt(arrJiShu[m]);
+    }
+
+    for(var n=0;n<arrOuShu.length;n++){
+        sumOuShu=sumOuShu+parseInt(arrOuShu[n]);
+    }
+
+    for(var p=0;p<jishu_child1.length;p++){
+        sumJiShuChild1=sumJiShuChild1+parseInt(jishu_child1[p]);
+        sumJiShuChild2=sumJiShuChild2+parseInt(jishu_child2[p]);
+    }     
+    //计算总和
+    sumTotal=parseInt(sumJiShu)+parseInt(sumOuShu)+parseInt(sumJiShuChild1)+parseInt(sumJiShuChild2);
+
+    //计算Luhm值
+    var k= parseInt(sumTotal)%10==0?10:parseInt(sumTotal)%10;       
+    var luhm= 10-k;
+
+    if(lastNum==luhm){
+        return true;
+    }
+    else{
+        return false;
+    }       
+}
+function is_array(test)  
+{  
+    if(typeof test == 'object' && typeof test.sort == 'function' && typeof test.length == 'number')  
+    {  
+        return true;  
+    }  
+    else  
+    {  
+        return false;  
+    }  
+}
+function gaClickSta(strEvent)
+{
+}
+function ignoreSpaces(string) {
+    var temp = "";
+    string = '' + string;
+    splitstring = string.split(" ");
+    for(i = 0; i < splitstring.length; i++)
+        temp += splitstring[i];
+    return temp;
+}
+function  checkIAgree(){
+    $("#tip_affirm").css("display","none");   
+}
+
+function check_all(obj){$("input." + obj).each(function(i){this.checked = true;});}
+function check_no(obj){$("input." + obj).each(function(i){this.checked = false;});}
+function check_fan(obj){$("input." + obj).each(function(i){this.checked = this.checked == true ? false : true;});}
+function check_str(obj){str = new String();$("input." + obj).each(function(i){str = this.checked == true ? str + this.value + "," : str;});str = str.substr("0", str.lastIndexOf(","));return str;}
+
+function keyFocus(iptName,defValue)
+{
+
+    var _text = $("#"+iptName).val();
+
+    if(_text == defValue)
+    {
+        $("#"+iptName).attr("value", '');
+        $("#"+iptName).attr("style",'color:#555');
+    }   
+}
+function keyBlur(iptName,defValue)
+{   
+    var _text = $("#"+iptName).val();  
+    if(_text == '')
+    {
+        $("#"+iptName).attr("value",defValue);
+        $("#"+iptName).attr("style",'color:#999');
+    }
+}
+
+function getCookieVal(offset) {
+    var endstr = document.cookie.indexOf(";", offset);
+    if(endstr == -1) {
+        endstr = document.cookie.length;
+    }
+    return document.cookie.substring(offset, endstr);
+}
+function getCookie(name) {
+    var arg = name + "=";
+    var alen = arg.length;
+    var clen = document.cookie.length;
+    var i = 0;
+    var j = 0;
+    while(i < clen) {
+        j = i + alen;
+        if(document.cookie.substring(i, j) == arg){
+            return getCookieVal(j);
+        }
+        i = document.cookie.indexOf(" ", i) + 1;
+        if(i === 0){
+            break;
+        }
+    }
+    return '';
+}
+function deleteCookie(name,path,domain) {
+    var exp = new Date();
+    var cval = getCookie(name);
+    exp.setTime(exp.getTime() - 1);
+    document.cookie = name + "=" + cval + "; expires=" + exp.toGMTString() +
+        ((domain === null) ? "" : ("; domain=" + domain)) +
+        ((path === null) ? "" : ("; path=" + path)) ;
+}
+
+function deleteCookie4Search(name,path,domain) {
+    var exp = new Date();
+    var cval = getCookie(name);
+    exp.setTime(exp.getTime() - 1);
+    document.cookie = name + "=" + cval + "; expires=" + exp.toGMTString() +
+        ((domain === null) ? "" : ("; domain=" + domain)) +
+        ((path === null) ? "" : ("; path=" + path)) ;
+}
+
+function setCookie(name, value) {
+    var argv = setCookie.arguments;
+    var argc = setCookie.arguments.length;
+    var exp = (argc > 2) ? argv[2] : 90;
+    var path = (argc > 3) ? argv[3] : null;
+    var domain = (argc > 4) ? argv[4] : null;
+    var secure = (argc > 5) ? argv[5] : false;
+    var expires = new Date();
+    deleteCookie(name,path,domain);
+    if(exp < 365) {
+        expires.setTime(expires.getTime() + (exp*24*60*60*1000));
+    }else{
+        expires.setTime(expires.getTime() + (exp));
+    }
+    document.cookie = name + "=" + value +
+        "; expires=" + expires.toGMTString() +
+        ((domain === null) ? "" : ("; domain=" + domain)) +
+        ((path === null) ? "" : ("; path=" + path)) +
+        ((secure === true) ? "; secure" : "");
+}
+function orderDetail(lodgeId,sameRoomNum,startDate,endDate)
+{
+       content = '';
+        $.ajax({
+            type: "get",
+            url: XZWebUrlWriter.getAjax_GetBookLodgeUnitDetailUrl(lodgeId,sameRoomNum,startDate,endDate),
+            async:false,
+            success: function(data) {
+                content = data;
+            }
+        });
+    $('#lodgeUnitPriceDetail').dialog({
+        width : 750,
+        //height:520,
+        resizable: false,
+        modal:false,
+        position: "center"
+    });
+    if ($.browser.msie && ($.browser.version == "6.0") && !$.support.style) 
+    { 
+        $('#lodgeUnitPriceDetail').dialog({
+            bgiframe: true,
+            height:520
+        });
+    } 
+
+    $('#lodgeUnitPriceDetail').html(content);
+    $('#lodgeUnitPriceDetail').dialog("open");
+    $('.ui-dialog-titlebar').hide();
+    $('.ui-widget-content').css('border','0px');
+}
+
+function priceOrder()
+{
+    var bookorderid = $("#bookOrderId").val();
+    orderPriceDetail(bookorderid);
+}
+
+function orderPriceDetail(bookOrderId,url)
+{
+    var url = (typeof url == "undefined") ? XZWebUrlWriter.getAjax_GetOrderPriceDetailUrl(bookOrderId) : url;
+     content = '';
+        $.ajax({
+            type: "get",
+            url: url, 
+            async:false,
+            success: function(data) {
+                content = data;
+            }
+        });
+    $('#lodgeUnitPriceDetail').dialog({
+        width : 750,
+        resizable: true,
+        modal:false,
+        position: "center"
+    });
+    if ($.browser.msie && ($.browser.version == "6.0") && !$.support.style) 
+    { 
+        $('#lodgeUnitPriceDetail').dialog({
+            height:520
+        });
+    }
+    $('#lodgeUnitPriceDetail').html(content);
+    $('#lodgeUnitPriceDetail').dialog("open");
+    $('.ui-dialog-titlebar').hide();
+    $('.ui-widget-content').css('border','0px');
+}
+
+function dateTransform(date)
+{
+    var newDate = new Date(date);
+    var dateY = newDate.getFullYear();
+    var dateM = getFullDate(newDate.getMonth()+1);
+    var dateD = getFullDate(newDate.getDate());
+    return dateY + "-" + dateM + "-" + dateD;
+}
+function getSubCHString(value,len)
+{
+    if(value.length <= len)
+        return value;
+    var strlen = 0; 
+    var strnum = 0;
+    var str = "";
+    for(var i = 0;i < value.length;i++)
+    {
+        strlen ++;
+        if(value.charCodeAt(i) <= 128)
+        {
+            strnum++;
+        }
+        if(strnum > len)
+        {
+            strnum = len;
+        }
+        str += value.charAt(i);
+        if(strlen >= (len + strnum)){ 
+            return str + '...';
+        }
+    }
+    return str + '...';
+}
+$(function(){
+    window.setTimeout(getLayzeLoadData,1000);
+})
+function getLayzeLoadData()
+{
+    var layzeloadObj = $('layzeload');
+    if(layzeloadObj.length<0)
+    {
+        return false;
+    }
+    layzeloadObj.each(function(){
+        var turl = encodeURIComponent($(this).attr('turl'));
+        var memkey = $(this).attr('memkey');
+        var memtimeout = $(this).attr('memtimeout');
+        var jsexecafterload = $(this).attr('jsexecafterload');
+        var id = 'load_'+$(this).attr('key');
+
+        $.ajax({
+            type:"get",
+            url: XZWebUrlWriter.getAjax_GetLazyInfoUrl(memkey,memtimeout,turl), 
+            success:function(data){
+                $("#"+id).html(data);
+                if (jsexecafterload)
+                    eval(jsexecafterload);
+            }
+        })
+    })
+    return false;
+}
+function isIe6()
+{
+    if($.browser.msie && $.browser.version=="6.0")
+    {
+        return true;
+    }
+    return false;
+}
+function changeDate(startDate,days) 
+{
+    // 参数表示在当前日期下要增加的天数
+    var now = new Date(startDate.replace(/-/g, "/"));
+    // + 1 代表日期加，- 1代表日期减
+    now.setDate((now.getDate() + 1 * days));
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    if (month < 10) {
+        month = '0' + month;
+    }
+    if (day < 10) {
+        day = '0' + day;
+    }
+    return year + '-' + month + '-' + day;
+}
+function openNewPage(url)
+{
+    var a = document.createElement("a");
+    a.setAttribute("href", url);
+    a.setAttribute("target", "_blank");
+    a.setAttribute("id", "openwin");
+    document.body.appendChild(a);
+    a.click();
+}
+function ajaxHandleCall(req,callback)
+{
+    if(!req || "object" !== typeof req)
+    {
+        return false;    
+    }
+
+    $.ajax({
+        tyep : req.type,
+        url : req.url,
+        data : req.data + '&_t=' + new Date().getTime(),
+        success : function(data){
+            if(data)
+            {
+                callback(data);    
+            }
+        }
+    });
+}
+function isDefined(property) 
+{
+    return 'undefined' !== typeof property;
+}
+function clickEvent(urlTracker,pageType)
+{
+    if(!isDefined(pageType) && !isDefined(urlTracker) && !isDefined(_paq))
+        return false; 
+
+    urlTracker = 'http://www.trackerlink.com/'+pageType+'/'+urlTracker;
+    _paq.push(['trackLink', urlTracker, 'link']);
+}
+function searchEvent(pageType)
+{
+    var defaultStartDate = $('#defaultstartdate').val();
+    var defaultEndDate = $('#defaultenddate').val();
+    var startDate = $('#startdate').val();
+    var endDate = $('#enddate').val();
+    var url="defaultstartdate="+defaultStartDate+"&defaultenddate="+defaultEndDate+"&startdate="+startDate+"&enddate="+endDate;
+    //clickEvent(url, pageType);
+}
+function flashChecker()
+{
+    var hasFlash=0;         //是否安装了flash
+    var flashVersion=0; //flash版本
+    var isIE=/*@cc_on!@*/0;      //是否IE浏览器
+
+    if(isIE)
+    {
+        var swf = new ActiveXObject('ShockwaveFlash.ShockwaveFlash'); 
+        if(swf) {
+            hasFlash=1;
+            VSwf=swf.GetVariable("$version");
+            flashVersion=parseInt(VSwf.split(" ")[1].split(",")[0]); 
+        }
+    }else{
+        if (navigator.plugins && navigator.plugins.length > 0)
+        {
+            var swf=navigator.plugins["Shockwave Flash"];
+            if (swf)
+            {
+                hasFlash=1;
+                var words = swf.description.split(" ");
+                for (var i = 0; i < words.length; ++i)
+                {
+                    if (isNaN(parseInt(words[i]))) continue;
+                    flashVersion = parseInt(words[i]);
+                }
+            }
+        }
+    }
+    return {f:hasFlash,v:flashVersion};
+}
+function initDisplayLodgeUnitIndex(luidAndIndex)
+{
+    clickEvent('luidAndIndex_'+luidAndIndex,'search');
+}
+function setDialogHeight(dialogId)
+{
+    var dialogHeight = $("#"+dialogId).height();
+    $('#'+dialogId).css({marginTop:'-'+dialogHeight/2+'px'});
+    $('.ui-dialog-titlebar').hide();
+}
+function closeDialog(dialogId)
+{
+    $("#"+dialogId).dialog("close");
+    return false;
+}
+function dateDiff(date1,date2)
+{
+    return parseInt((date2.getTime() - date1.getTime()) / (1000 * 60 * 60 * 24)); 
+}
+function CloseWebPage(){  
+    if (navigator.userAgent.indexOf("MSIE") > 0) {  //IE浏览器
+        if (navigator.userAgent.indexOf("MSIE 6.0") > 0) {  
+            window.opener = null; window.close();  
+        }  
+        else {  
+            window.open('', '_top'); window.top.close();  
+        }  
+    }  
+    else if (navigator.userAgent.indexOf("Firefox") > 0) {  //火狐浏览器
+        window.location.href = 'about:blank ';  
+    }  
+    else {     //其他浏览器
+        window.opener = null;   
+        window.open('', '_self', '');  
+        window.close();  
+    }  
+}  
+
+function chkstrlen(str) {     //检查输入的真实姓名的长度
+    var strlen = 0;
+    for(var i = 0;i < str.length; i++) {
+        if(str.charCodeAt(i) > 255) { //如果是汉字，则字符串长度加2
+            strlen += 2;
+        }
+        else { 
+            strlen++;
+        }
+    }
+    return   strlen;
+}
+function scrollPage(obj)
+{
+    var windowHeight = $(window).height();
+    var offsetTop = parseInt(obj.offset().top);
+    var scrollTop = $(document).scrollTop();
+    var suggestionHeight = obj.height();
+    if( (windowHeight - (offsetTop - scrollTop)) - suggestionHeight < 0 ) {
+        var newTopHeight = scrollTop + (suggestionHeight + 10 ) - (windowHeight - (offsetTop - scrollTop)); 
+        $('html,body').animate({ scrollTop: newTopHeight }, 300);
+    }
+
+}
+
+ 
+ var _paq = _paq || []; 
+
+$(window).load(function() {
+
+    var piwiktrigger = $('#piwik_trigger').val();
+    if(typeof(piwiktrigger) == 'undefined')
+    {
+        return false;
+    }
+
+    var u=(("https:" == document.location.protocol) ? "https://piwik.xiaozhu.com/" : "http://piwik.xiaozhu.com/"); 
+    _paq.push(['setSiteId', 1]); 
+    _paq.push(['setTrackerUrl', u+'piwik.php']); 
+    _paq.push(['setDomains',[".xiaozhu.com", "xiaozhu.com"]]); 
+    _paq.push(['setCookieDomain',".xiaozhu.com"]); 
+    var userId = $('#piwik_userId').val();
+
+    var searchtotal = $('#searchtotal').val();
+    var searchkey = $('#searchkey').val();
+    var searchcity = $('#searchcity').val();
+    var abtestCollection = $('#abtest_collection').val();
+
+    if(typeof(abtestCollection) != 'undefined')
+    {
+        var abtestCollectionObj=eval("("+abtestCollection+")");
+        for(var i in abtestCollectionObj)
+        {
+            _paq.push(['setCustomVariable',abtestCollectionObj[i]['index'] , "abtest_"+i,abtestCollectionObj[i]['decide'], "visit"]); 
+        }
+    }
+
+    var submitOrder = $('#piwik_submitOrder').val();
+    var urlParams = $('#piwik_urlParams').val();
+    var successOrder = $('#piwik_successOrder').val();
+    var pageType = $('#pagetype').val();
+    var jinshanId = $('#jinshanId').val();
+
+    if(typeof(urlParams) != 'undefined' &&  urlParams.length > 1)
+    {
+        _paq.push(['setCustomVariable', 2, "urlparams", urlParams, "visit"]); 
+    }
+
+    if(typeof(successOrder) != 'undefined' && typeof(submitOrder) != 'undefined')
+    {
+        _paq.push(['setCustomVariable', 3,'order_' + submitOrder, 'order_success_' + successOrder, "visit"]); 
+    }
+
+    if(typeof(jinshanId) != 'undefined' && jinshanId !='_')
+    {
+        _paq.push(['setCustomVariable', 4,'jinshanId', jinshanId, "visit"]); 
+    }
+
+    /*
+    if(typeof(searchtotal) != 'undefined' &&  typeof(searchkey) != 'undefined' && typeof(searchcity) != 'undefined' && searchkey.length > 1)
+    {
+        _paq.push(['trackSiteSearch',searchkey, searchcity, searchtotal]); 
+    }
+    */
+
+    if(typeof(userId) != 'undefined')
+    {
+        _paq.push(['setCustomVariable',1, "userid", userId, "visit"]); 
+    }
+    if(typeof(pageType) != 'undefined')
+    {
+        _paq.push(['setDocumentTitle', pageType]);
+    }
+    var luidAndIndex = $('#luidAndIndex').val();
+    if(typeof(luidAndIndex) != 'undefined')
+    {   
+        initDisplayLodgeUnitIndex(luidAndIndex);
+    }   
+    _paq.push(['trackPageView']); 
+    _paq.push(['enableLinkTracking']); 
+    //var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript'; g.defer=true; g.async=true; g.src=u+'piwik.js'; 
+    //s.parentNode.insertBefore(g,s); 
+});
+ 
+ $(function(){
+    window.XZWebEmailRegister = {
+        //{{{
+        init : function(){
+            //{{{
+            //使用js控制页面始终居中，所以最初隐藏，防止js生效的瞬间跳跃
+            var emailInfo = $('#emailHidden').val();
+            if(emailInfo == ''){
+                $('#emailInfoContanier').show(); 
+                RegisterLoginComponent.centerRegLoginForm(668,307);
+                $(window).resize(function(){
+                    RegisterLoginComponent.centerRegLoginForm(668,307);
+                });
+            } else {
+                $('#emailRegInfo').show();
+                RegisterLoginComponent.centerRegLoginForm(403,480);
+                $(window).resize(function(){
+                    RegisterLoginComponent.centerRegLoginForm(403,480);
+                });
+            }
+            this.input_email = RegisterLoginComponent.initInputEmail();
+            this.input_email.e.keydown(function(e){
+                switch(e.keyCode) {
+                    case 13:
+                        $('#reg-btn').trigger('click');
+                }
+            });
+            this.input_country = RegisterLoginComponent.initSelectCountry();
+            this.initInputPassport();
+            this.input_username = RegisterLoginComponent.initInputUserName();
+            this.input_password = RegisterLoginComponent.initInputPassWord({focusPlaceHolder:'请输入6-12位字母、数字或符号'});
+             this.input_password.e.keydown(function(e){
+                switch(e.keyCode) {
+                    case 13:
+                        $('#regConfirmBtn').trigger('click');
+                }
+            });
+            this.initRegBtn();
+            this.initRegConfirmBtn();
+            RegisterLoginComponent.pageLoginDirect();
+            //}}}
+        },
+        initRegBtn : function(){
+            //{{{
+            var that = this;
+            $('#reg-btn').click(function(e){
+                e.preventDefault();
+                if($(this).attr('disabled')){ return false; }
+                $.when((function(){
+                    var def = $.Deferred();
+                    //if(that.input_email.isCheck == false){
+                        that.input_email.e.blur();
+                    //}
+                    setTimeout(function(){
+                        def.resolve(); 
+                    },500);
+
+                    return def.promise();
+                })()).done(function(){
+                    if (!(that.input_email.status)){
+                        return false;
+                    }
+                    $('#reg-btn').html('邮件发送中...').attr('disabled',true);
+                    that.getValidateEmail();
+                });
+            });    
+            //}}}
+        },
+        getValidateEmail : function(){
+            //{{{
+            var next = $("#next").val();
+            XZWebAjax.post(XZWebUrlWriter.getAjax_SendRegValidateEmailUrl(this.input_email.e.val(),next),
+                    {},true,this.handleGetValidateEmail);
+            //}}}
+        },
+        handleGetValidateEmail : function(ajaxResponse){
+            //{{{
+            if( ajaxResponse.status == 1){
+                XZWebEmailRegister.showEmailSendSuc();
+            } else {
+                $('#reg-btn').html('立即注册').attr('disabled',false);
+                XZWebEmailRegister.input_email.showError(ajaxResponse.errmsg); 
+            }
+            //}}}
+        },
+        initRegConfirmBtn : function(){
+            //{{{
+            var that = this;
+            that.hasCommit = false;
+            $('#regConfirmBtn').click(function(e){
+                e.preventDefault();
+                if(that.hasCommit){
+                    return false; 
+                }
+                that.hasCommit = true;
+                $.when((function(){
+                    var def = $.Deferred();
+                    //if(!that.input_country.isCheck){
+                       that.input_country.e.blur();
+                    //}
+                    //if(!that.input_passport.isCheck){
+                        that.input_passport.e.blur();
+                    //}
+                    //if(!that.input_username.isCheck){
+                        that.input_username.e.blur();
+                    //}
+                    //if(!that.input_password.isCheck){
+                        that.input_password.e.blur();
+                    //}
+                    setTimeout(function(){
+                        def.resolve(); 
+                    },500); 
+
+                    return def.promise();
+                })()).done(function(){
+                    if(!(that.input_country.status && that.input_passport.status
+                        && that.input_username.status && that.input_password.status)){
+                        that.hasCommit = false;
+                        return false; 
+                    }
+                    var email = $("#emailHidden").val();
+                    var createfrom = $("#createfrom").val();
+                    var comefrom = $("#comefrom").val();
+                    var referrer = $("#referrer").val();
+                    var lodgeid = $("#lodgeid").val();
+                    var reg_rst = pub.doRegisterByEmail(
+                        email,
+                        that.input_username.e.val(),
+                        that.input_password.e.val(),
+                        that.input_country.e.countryId,
+                        that.input_passport.e.val(),
+                        createfrom,
+                        comefrom,
+                        referrer,
+                        lodgeid    
+                        );
+                    if (reg_rst.status == 0) {
+                        that.input_email.showError(reg_rst.msg);
+                        return false;
+                    }
+                    XZWebEmailRegister.showRegSuccessInfo(reg_rst);
+                });
+            });
+            //}}}
+        },
+        showRegSuccessInfo : function(reg_rst){
+            //{{{
+            window.location.href = reg_rst.next;
+            //}}}
+        },
+        showEmailSendSuc : function(){
+            //{{{
+            $('#emailInfoContanier').hide();
+            $('#emailValidateContainer').show();
+            $('#validateEmail').text(this.input_email.e.val());
+            $(window).unbind('resize');
+            RegisterLoginComponent.centerRegLoginForm(403,443);
+            $(window).resize(function(){
+                RegisterLoginComponent.centerRegLoginForm(403,443);
+            });
+            var that = this;
+            var email = this.input_email.e.val();
+            var domainEmailUrl  = email.substr(email.indexOf('@')+1);
+            var emailDomain = domainEmailUrl.substr(0,domainEmailUrl.indexOf('.'));
+            var emailLoginDomailUrl = new Array();  
+            emailLoginDomailUrl["gmail"] = "https://mail.google.com";
+            emailLoginDomailUrl["hotmail"] = "https://login.live.com";
+            if(emailLoginDomailUrl[emailDomain]){
+                var emailUrl = emailLoginDomailUrl[emailDomain];
+            } else {
+                var emailUrl = "http://mail."+domainEmailUrl;
+            }
+            $('#goToCheckEmail').attr('href',emailUrl);
+            $('#emailReValidate').click(function(e){
+                e.preventDefault(); 
+                $('#emailValidateContainer').hide();
+                $('#emailInfoContanier').show();
+                RegisterLoginComponent.centerRegLoginForm(668,307);
+                $(window).resize(function(){
+                    RegisterLoginComponent.centerRegLoginForm(668,307);
+                });
+                $('#reg-btn').html('立即注册').attr('disabled',false);
+            });
+            //}}}
+        },
+        initInputPassport : function(){
+            //{{{
+            var that = this;
+            var input_passport = new inputBox('#input-passport', '#input-passport-tip', {
+                placeHolder:'护照号码'
+            });
+            input_passport.e.focus(function(){
+                that.input_country.e.blur();
+            }).blur(function(){
+                var checker = checkPassport(input_passport.e.val());
+                if (checker.rst == false) {
+                    input_passport.showError(checker.msg);
+                    input_passport.e.addClass('r_input_1_cur');
+                    return false;
+                }
+                input_passport.status = true;
+            }).keyup(function(){
+                input_passport.i.hide();
+                input_passport.e.removeClass('r_input_1_cur');
+            });
+
+            this.input_passport = input_passport;
+            //}}}
+        }
+        //}}}
+    };
+    XZWebEmailRegister.init();
+});
